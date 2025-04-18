@@ -1,0 +1,340 @@
+大模型开发环境准备
+
+安装Anaconda
+
+Anaconda是一站式数据科学与机器学习平台，专为开发者、数据分析师设计,并带有python中超过180个科学包及其依赖项。通过 Anaconda，您可以轻松管理数据环境、安装依赖包，快速启动数据分析、机器学习项目。
+
+
+
+Anaconda集成了
+
+丰富的 Python 数据科学库：Anaconda 集成了常用的 Python数据科学库，如 NumPy（数值计算）、Pandas（数据处理）、Matplotlib 和 Seaborn（数据可视化）、Scikit-learn（机器学习）等，涵盖了从数据预处理到机器学习的完整工作流。
+
+虚拟环境管理：Anaconda 提供了虚拟环境管理功能，允许您创建、隔离和管理不同项目的环境，确保各项目之间的依赖不互相干扰。
+
+Jupyter Notebook 集成：内置 Jupyter Notebook，帮助您在交互式界面中编写、运行 Python 代码，进行数据分析、可视化和报告展示。
+
+机器学习和深度学习支持：Anaconda 支持各种机器学习库（如 TensorFlow、PyTorch）和深度学习工具，帮助您快速启动机器学习项目。
+
+
+
+官网下载anaconda：https://www.anaconda.com/download
+
+
+
+然后进入邮件箱中点击下载链接地址，下载：
+
+
+
+一、下载Anaconda之后双击安装
+
+
+
+安装完Anaconda,就可以进入Anaconda的命令行程序中
+
+
+
+1.找到点击Anaconda prompt进入Anaconda的命令行程序中
+
+
+
+
+
+2.在Anaconda prompt创建虚拟环境名为llm并指定python编译器的版本
+
+
+
+执行：conda create -n llm python=3.11  （llm 是你创建的虚拟环境名称）
+
+ 
+
+
+
+如果想删除虚拟环境，执行命令：conda remove -n llm --all
+
+
+
+2.查看虚拟环境
+
+conda env list
+
+
+
+存在llm说明llm环境已经创建成功
+
+
+
+激活虚拟环境
+
+默认情况下Anaconda是在base环境中(base是Anaconda的默认环境,不用创建就存在)
+
+
+
+进入llm环境,执行:
+
+conda activate llm 
+
+
+
+
+
+安装运行大模型代码需要的基本组件库
+
+
+
+在requirements.txt文件中存放了基本组件信息及版本号
+
+
+
+接下来基于requirements.txt安装
+
+
+
+把requirements.txt放在d盘下，基于requirements.txt文件安装：
+
+
+
+pip install -i https://pypi.doubanio.com/simple/ -r d:\requirements.txt
+
+
+
+安装完成后如下:
+
+
+
+
+
+可以通过pip list命令查看安装好的组件库
+
+
+
+
+
+在Pycharm中使用
+
+1.打开Pycharm新建项目
+
+
+
+
+
+
+
+关联Anaconda中的环境
+
+      
+
+
+
+
+
+
+
+
+
+可以使用pycharm写程序了(推荐使用)
+
+
+
+第一个通过API接入大模型的程序
+
+from openai import OpenAIimport osclient = OpenAI(    # api_key='OPENAI_API_KEY',   #OPENAI_API_KEY你的key    api_key ='sk-d5e537fff4c744bb898754d251f22afe',   #填入你的key    base_url='https://dashscope.aliyuncs.com/compatible-mode/v1' #对应模型的url,当前是通义千问的url)response = client.chat.completions.create(    model='deepseek-r1',  #阿里通义千问的介入了deepseek模型, 注册实名后可以免费使用    messages=[        # 为AI设定角色        {'role': 'system','content': '总结user提交的内容。用一句不超过50字的话总结这段小说的情节。仅回答总结，不需要添加其他内容。'},        # 用户的输入        {'role': 'user','content': "给我几个适合男人用的花名"}    ])print(response.choices[0].message.content)
+
+
+
+
+
+
+
+
+
+在Jupyter notebook中使用anaconda的虚拟环境
+
+Jupyter notebook是一个开源的网页应用程序，允许用户创建和共享实时代码、方程式、可视化和叙述文本的文档，Anaconda中自带了这应用程序。但是要让Jupyter使用anaconda的虚拟环境,需要安装ipykernel来支持。
+
+使用ipykernel管理Jupyter notebook中的环境
+
+1.安装ipykernel（如果尚未安装）
+
+打开终端或命令提示符，激活你想要在Jupyter中使用的Python环境，然后运行：
+
+例如：
+
+先激活llm环境：conda avtivate llm
+
+
+
+
+
+
+
+再执行：pip install ipykernel  （如果出现安装失败，可以重复执行这个命令）
+
+
+
+
+
+2.为Jupyter安装ipykernel 内核
+
+同样在终端或命令提示符中，激活相应的环境，然后运行：
+
+python -m ipykernel install --user --name llm --display-name "Python (llm)"
+
+
+
+
+
+这里llm 是你的环境名称，"Python (llm )"是你在Jupyter Notebook中显示的内核名称。
+
+
+
+就可以在jupyter notebook中使用llm环境了
+
+
+
+运行Jupyter
+
+
+
+
+
+
+
+就会打开浏览器显示一下网页,就是Jupyter的网页界面
+
+
+
+b.创建Jupter文件
+
+
+
+
+
+
+
+
+
+出现一个新的网页,如下:
+
+
+
+
+
+
+
+
+
+第一个连接大模型的程序：
+
+把存放key的.env文件放在与ipynb程序文件相同的路径下
+
+from openai import OpenAIclient = OpenAI(    api_key='OPENAI_API_KEY',   #OPENAI_API_KEY你的key    base_url='BASE_URL'        #对应模型的url)response = client.chat.completions.create(    model='qwen-plus',  #阿里通义千问的模型, 注册实名后可以免费使用    messages=[        # 为AI设定角色        {'role': 'system','content': '总结user提交的内容。用一句不超过50字的话总结这段小说的情节。仅回答总结，不需要添加其他内容。'},        # 用户的输入        {'role': 'user','content': "给我几个适合男人用的花名"}    ])print(response.choices[0].message.content)
+
+
+
+
+
+
+
+
+
+Jupyter的文件存放默认位置
+
+
+
+启动Jupter后会有一个黑色的框如下,这个黑色的框包含Jupter运行的日志记录,不能关闭它,从这个界面以下,可以看到它的默认存储文件的位置
+
+
+
+
+
+
+
+
+
+如何修改默认的文件存储位置
+
+
+
+1.执行:jupyter notebook --generate-config
+
+
+
+如下:
+
+
+
+
+
+2.从上面红色这个路径,找到配置文件jupyter_notebook_config.py
+
+右键选择记事本打开jupyter_notebook_config.py文件
+
+如下:找到notebook_dir
+
+
+
+
+
+
+
+找到这个配置文件并打开以后先不要着急，放在一边先。这时我们回过头来，在目标目录下新建个文件夹，也可以是已有的文件夹，总之是你要更改的新目录就可以了。这时候我们就把这个文件夹的路径写出来。
+
+比如我要把路径改到D盘下，于是我在D盘建了个新的文件夹01-JupyterNotebook，然后我把这个路径复制下来：D:\01-JupyterNotebook
+
+修改:如下(注意去掉前面的#)
+
+
+
+
+
+
+
+然后重新启动Jupyter notebook
+
+
+
+5.关闭之后重启可能会再次进入默认路径，查看配置文件明明已经修改路径
+
+
+
+在开始菜单找到Jupyte Notebook快捷键，鼠标右击 --> 更多 --> 打开文件位置，找到对应的“Jupyte Notebook”快捷图标，鼠标右击 --> 属性 --> 目标，去掉后面的 “%USERPROFILE%/”，然后点击“应用”，“确定”，这时再重新启动Jupyte Notebook就可以了
+
+
+
+注：如果重启Jupyter notebook 出现闪退打不开 那就是配置文件时出现错误 可能是路径带了双引号什么的 删除即可
+
+
+
+再运行Jupyter notebook就可以看到,已经改变目录了
+
+
+
+
+
+
+
+
+
+Anaconda中删除虚拟环境
+
+conda remove --name python3 --all
+
+Anaconda中虚拟环境已经删除，却在Jupyter notebook的‘new’下还存在已删除的虚拟环境名称，那如何删除呢？
+
+
+
+1.anaconda prompt中查看
+
+jupyter kernelspec list
+
+2.删除指定比如：python3
+
+jupyter kernelspec remove python3
+
+
+
+
+
+
+
